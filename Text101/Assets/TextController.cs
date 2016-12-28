@@ -51,7 +51,7 @@ public class TextController : MonoBehaviour {
 					"Press S to view Sheets, or L to view Lock";
 					
 		handleChoice(new Dictionary<KeyCode, States>(){
-			{KeyCode.S, States.sheets},
+			{KeyCode.S, States.sheets_to_mirror},
 			{KeyCode.L, States.small_lock_to_mirror}
 		});					
 	}
