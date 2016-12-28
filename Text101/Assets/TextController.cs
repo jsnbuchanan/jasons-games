@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections.Generic;
 
 public class TextController : MonoBehaviour {
@@ -18,14 +19,16 @@ public class TextController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		print (myState);
-		if (myState == States.cell) {displayCell();}
-		else if (myState == States.sheets) {viewSheets();}
-		else if (myState == States.sheets_to_mirror) {holdMirrorToSheets();}
-		else if (myState == States.small_lock) {viewLock();}
-		else if (myState == States.small_lock_to_mirror) {holdMirrorToLock();}
-		else if (myState == States.mirror) {viewMirror();}
-		else if (myState == States.cell_holding_mirror) {displayCellWhileHoldingMirror();}
-		else if (myState == States.freedom) {displayFreedom();}
+		handleState (new Dictionary<States, Action>() {
+			{States.cell, 					displayCell},
+			{States.sheets, 				viewSheets},
+			{States.sheets_to_mirror, 		holdMirrorToSheets},
+			{States.small_lock, 			viewLock},
+			{States.small_lock_to_mirror, 	holdMirrorToLock},
+			{States.mirror, 				viewMirror},
+			{States.cell_holding_mirror, 	displayCellWhileHoldingMirror},
+			{States.freedom, 				displayFreedom},
+		});
 	}
 	
 	private void displayCell() {
@@ -96,10 +99,6 @@ public class TextController : MonoBehaviour {
 		handleChoice(getCommand(KeyCode.R, States.cell_holding_mirror));
 	}
 	
-	private KeyValuePair<KeyCode, States> getCommand(KeyCode key, States state) { 
-		return new KeyValuePair<KeyCode, States>(key, state);
-	}
-	
 	private void holdMirrorToLock() {
 		text.text = "You carefully put the mirror through the bars, and turn it round " +
 					"so you can see the lock. You can just make out fingerprints around " +
@@ -120,13 +119,27 @@ public class TextController : MonoBehaviour {
 		handleChoice(getCommand(key, States.cell));
 	}
 	
+	private KeyValuePair<KeyCode, States> getCommand(KeyCode key, States state) { 
+		return new KeyValuePair<KeyCode, States>(key, state);
+	}
+	
 	private void handleChoice(IDictionary<KeyCode, States> commands) {
 		foreach (var command in commands) {
 			if (handleChoice(command)) {
 				break;
 			}
 		}
-	}	
+	}
+		
+	private void handleState(IDictionary<States, Action> states) {
+		foreach (KeyValuePair<States, Action> state in states) {
+			if (myState == state.Key) {
+				Action action = state.Value;
+				action();
+				break;
+			}
+		}
+	}
 	
 	private bool handleChoice(KeyValuePair<KeyCode, States> command) {
 		bool commandExecuted = Input.GetKeyDown(command.Key);
