@@ -248,7 +248,6 @@ public class TextController : MonoBehaviour {
 	}
 		
 	private void handleState(IDictionary<States, Action> states) {
-		print ("made it here");
 		foreach (KeyValuePair<States, Action> state in states) {
 			if (myState == state.Key) {
 				Action action = state.Value;
