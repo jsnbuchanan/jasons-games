@@ -5,7 +5,10 @@ using System.Collections.Generic;
 
 public class TextController : MonoBehaviour {
 
-	private enum States {cell, sheets, sheets_to_mirror, small_lock, small_lock_to_mirror, mirror, cell_holding_mirror, freedom};
+	private enum States {
+		cell, sheets, sheets_to_mirror, small_lock, small_lock_to_mirror, mirror, cell_holding_mirror, corridor,
+		freedom,
+		};
 	
 	private States myState;
 		
@@ -27,9 +30,11 @@ public class TextController : MonoBehaviour {
 			{States.small_lock_to_mirror, 	holdMirrorToLock},
 			{States.mirror, 				viewMirror},
 			{States.cell_holding_mirror, 	displayCellWhileHoldingMirror},
-			{States.freedom, 				displayFreedom},
+			{States.corridor, 				displayCorridor},
 		});
 	}
+	
+	#region State descriptions
 	
 	private void displayCell() {
 		text.text = "You are in a prison cell, and you want to escape. There are " +
@@ -56,7 +61,7 @@ public class TextController : MonoBehaviour {
 		});					
 	}
 	
-	private void displayFreedom() {
+	private void displayCorridor() {
 		text.text = "You are FREE!\n\n" +
 					"Press P to Play again";
 
@@ -106,11 +111,14 @@ public class TextController : MonoBehaviour {
 					"Press O to Open, or R to Return to your cell" ;
 		
 		handleChoice(new Dictionary<KeyCode, States>(){
-			{KeyCode.O, States.freedom}, 
+			{KeyCode.O, States.corridor}, 
 			{KeyCode.R, States.cell_holding_mirror}
 		});
 	}
 	
+	#endregion
+	
+	#region Utility Code
 	private void handleReturnToCell() {
 		handleReturnToCell(KeyCode.R);
 	}
@@ -148,4 +156,5 @@ public class TextController : MonoBehaviour {
 		}
 		return commandExecuted;
 	}
+	#endregion
 }
